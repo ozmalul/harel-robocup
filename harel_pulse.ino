@@ -41,11 +41,11 @@ NewPing side_sonar(SIDE_TRIGGER_PIN, SIDE_ECHO_PIN, MAX_DISTANCE); // NewPing se
 
 
 const int ledPin = LED_BUILTIN;  
-int isOn = false;  
+int ledState = LOW;  
 unsigned long previousMillis = 0; 
-
-const long intervalOn = 15;
-const long intervalOff = 35;  
+const long intervalOn = 10;
+const long intervalOff = 140;  
+ 
 
 int speed=255;
 int slowSpeed=190;
@@ -70,6 +70,7 @@ void setup() {
 }
 
 void forward() {
+    Serial.print(" forward ");
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
 
@@ -81,6 +82,9 @@ void forward() {
 }
 
 void right() {
+  
+    Serial.print(" right ");
+  
   digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
 
@@ -91,6 +95,9 @@ void right() {
 }
 
 void hardright() {
+
+    Serial.print(" hardright ");
+  
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
 
@@ -102,6 +109,9 @@ void hardright() {
 }
 
 void left() {
+
+    Serial.print(" left ");
+  
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
  
@@ -115,6 +125,9 @@ void left() {
 
 
 void hardleft() {
+
+    Serial.print(" hardleft ");
+  
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
  
@@ -125,6 +138,9 @@ void hardleft() {
  rightSpeed = speed;
 }
 void stop() {
+
+    Serial.print(" stop ");
+  
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
 
@@ -194,7 +210,7 @@ void loop() {
   Serial.print("\t");
   Serial.print(digitalRead(centerSensor));
   Serial.print("\t");
-  Serial.println(digitalRead(rightSensor));
+  Serial.print(digitalRead(rightSensor));
 
   if (digitalRead(leftSensor) == LOW && digitalRead(centerSensor) == HIGH && digitalRead(rightSensor) == HIGH)
   {
@@ -225,25 +241,27 @@ void loop() {
   }
 
   
+
   unsigned long currentMillis = millis();
-  if(isOn == false){
+  if(ledState == LOW){
     if (currentMillis - previousMillis >= intervalOn) {
       previousMillis = currentMillis;
-        isOn = true;
+      ledState = HIGH;
+      digitalWrite(ledPin, ledState);
+
       analogWrite(ena, 0);
       analogWrite(enb, 0);
-     
+
     }
   }
   else{
     if (currentMillis - previousMillis >= intervalOff) {
       previousMillis = currentMillis;
-        isOn = false;
-
+      ledState = LOW;
+      digitalWrite(ledPin, ledState);
+      
        analogWrite(enb, leftSpeed);
        analogWrite(ena, rightSpeed);
-
-       
     }
   }
 }
