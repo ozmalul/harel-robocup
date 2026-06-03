@@ -19,8 +19,8 @@
 #define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 
 
-#define SIDE_TRIGGER_PIN  17  // Arduino pin tied to trigger pin on the ultrasonic sensor.
-#define SIDE_ECHO_PIN     16  // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define SIDE_TRIGGER_PIN  52  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define SIDE_ECHO_PIN     53  // Arduino pin tied to echo pin on the ultrasonic sensor.
 #define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 
 NewPing front_sonar(FRONT_TRIGGER_PIN, FRONT_ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
@@ -71,11 +71,11 @@ void setup() {
 
 void forward() {
     Serial.print(" forward ");
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
 
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 
  leftSpeed = speed;
  rightSpeed = speed;
@@ -86,10 +86,10 @@ void right() {
     Serial.print(" right ");
   
   digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
+  digitalWrite(in2, HIGH);
 
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
   leftSpeed = speed;
  rightSpeed = 0;
 }
@@ -98,11 +98,11 @@ void hardright() {
 
     Serial.print(" hardright ");
   
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
 
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 
  leftSpeed = speed;
  rightSpeed = speed;
@@ -112,11 +112,11 @@ void left() {
 
     Serial.print(" left ");
   
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
- 
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+
   digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);
+  digitalWrite(in4, HIGH);
 
  leftSpeed = 0;
  rightSpeed = speed;
@@ -128,11 +128,11 @@ void hardleft() {
 
     Serial.print(" hardleft ");
   
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
- 
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
 
  leftSpeed = speed;
  rightSpeed = speed;
@@ -141,11 +141,11 @@ void stop() {
 
     Serial.print(" stop ");
   
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
 
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 
     
  leftSpeed = speed;
@@ -161,7 +161,7 @@ void loop() {
   Serial.print("front_distance: ");
   Serial.print(front_distance); // Send ping, get distance in cm and print result (0 = outside set distance range)
   Serial.print("cm ");
-/*
+
   if (front_distance > 0 && front_distance < 15)
   {
 
@@ -173,12 +173,12 @@ void loop() {
     Serial.print(side_distance); // Send ping, get distance in cm and print result (0 = outside set distance range)
     Serial.println("cm");
 
-    while (side_distance == 0 || side_distance > 65) {
+    while (side_distance == 0 || side_distance > 15) {
       //  while(true){
       delay(50);
       side_distance = side_sonar.ping_cm();
       hardright();
-      Serial.print("side_distance: ");
+      Serial.print("side_distance: 111 ");
       Serial.print(side_distance); // Send ping, get distance in cm and print result (0 = outside set distance range)
       Serial.println("cm");
     }
@@ -188,7 +188,7 @@ void loop() {
         delay(50);
         side_distance = side_sonar.ping_cm();
         forward();
-        Serial.print("side_distance: ");
+        Serial.print("side_distance: 222 ");
         Serial.print(side_distance); // Send ping, get distance in cm and print result (0 = outside set distance range)
         Serial.println("cm");
       }
@@ -205,7 +205,7 @@ void loop() {
     }
     Serial.println("stop");
   }
-  */
+  
   Serial.print(digitalRead(leftSensor));
   Serial.print("\t");
   Serial.print(digitalRead(centerSensor));
@@ -240,7 +240,7 @@ void loop() {
     // stop();
   }
 
-  
+ //  hardright();
 
   unsigned long currentMillis = millis();
   if(ledState == LOW){
