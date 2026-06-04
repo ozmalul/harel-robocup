@@ -53,6 +53,27 @@ int leftSpeed = 0;
 int rightSpeed = 0;
 
 void setup() {
+
+  pinMode(LEFT_S0,OUTPUT);    //pin modes
+  pinMode(LEFT_S1,OUTPUT);
+  pinMode(LEFT_S2,OUTPUT);
+  pinMode(LEFT_S3,OUTPUT);
+  pinMode(LEFT_sensorOut ,INPUT);
+
+  digitalWrite(LEFT_S0,HIGH);  //Putting S0/S1 on HIGH/HIGH levels means the output frequency scalling is at 100%  (recommended)
+  digitalWrite(LEFT_S1,HIGH); //LOW/LOW is off HIGH/LOW is 20% and  LOW/HIGH is  2%
+  digitalWrite(LEFT_S2,HIGH);
+  digitalWrite(LEFT_S3,HIGH);
+  pinMode(RIGHT_S0,OUTPUT);    //pin modes
+  pinMode(RIGHT_S1,OUTPUT);
+  pinMode(RIGHT_S2,OUTPUT);
+  pinMode(RIGHT_S3,OUTPUT);
+  pinMode(RIGHT_sensorOut ,INPUT);
+  digitalWrite(RIGHT_S0,HIGH);  //Putting S0/S1 on HIGH/HIGH levels means the output frequency scalling is at 100%  (recommended)
+  digitalWrite(RIGHT_S1,HIGH); //LOW/LOW is off HIGH/LOW is 20% and  LOW/HIGH is  2%
+  digitalWrite(RIGHT_S2,HIGH);
+  digitalWrite(RIGHT_S3,HIGH);
+ 
   // put your setup code here, to run once:
   pinMode(ena, OUTPUT);
   pinMode(in1, OUTPUT);
@@ -148,8 +169,8 @@ void stop() {
   digitalWrite(in4, HIGH);
 
     
- leftSpeed = speed;
- rightSpeed = speed;
+ leftSpeed = 0;
+ rightSpeed = 0;
 
 }
 
@@ -165,7 +186,7 @@ void loop() {
   if (front_distance > 0 && front_distance < 15)
   {
 
-    stop();
+    //stop();
     delay(50);
 
     int side_distance = side_sonar.ping_cm();
@@ -173,15 +194,18 @@ void loop() {
     Serial.print(side_distance); // Send ping, get distance in cm and print result (0 = outside set distance range)
     Serial.println("cm");
 
-    while (side_distance == 0 || side_distance > 15) {
+    while (true){//(! (side_distance > 0 && side_distance < 25)) {
       //  while(true){
       delay(50);
       side_distance = side_sonar.ping_cm();
-      hardright();
+      right();
       Serial.print("side_distance: 111 ");
       Serial.print(side_distance); // Send ping, get distance in cm and print result (0 = outside set distance range)
       Serial.println("cm");
+    pulse();
     }
+    right();
+    pulse();
     while (digitalRead(centerSensor) == HIGH) {
       while (side_distance > 0 && side_distance < 75 && digitalRead(centerSensor) == HIGH) {
         //  while(true){
@@ -222,7 +246,7 @@ void loop() {
   }
   else if (digitalRead(leftSensor) == HIGH && digitalRead(centerSensor) == LOW && digitalRead(rightSensor) == LOW)
   {
-    hardright();
+    right();
 
   }
   else if (digitalRead(leftSensor) == HIGH && digitalRead(centerSensor) == LOW && digitalRead(rightSensor) == HIGH)
@@ -231,16 +255,47 @@ void loop() {
 
   }
   else if (digitalRead(leftSensor) == LOW && digitalRead(centerSensor) == LOW && digitalRead(rightSensor) == HIGH)
-  {
-    hardright();
-
+  {       
+   //stop();
+     hardright();
+     pulse();
+     delay(1000);
+     while(!(digitalRead(leftSensor) == HIGH && digitalRead(centerSensor) == LOW && digitalRead(rightSensor) == HIGH)
+   )
+     {
+      left();
+      pulse();
+     }
+      
   }
+  else if (digitalRead(leftSensor) == HIGH && digitalRead(centerSensor) == LOW && digitalRead(rightSensor) == LOW)
+  {       
+   //stop();
+     hardright();
+     pulse();
+     delay(1000);
+     while(!(digitalRead(leftSensor) == HIGH && digitalRead(centerSensor) == LOW && digitalRead(rightSensor) == HIGH)
+   )
+     {
+      right();
+      pulse();
+     }
+      
+  }
+
+  
+
 
   else {
     // stop();
   }
 
  //  hardright();
+ Serial.println();
+pulse();
+}
+
+void pulse(){
 
   unsigned long currentMillis = millis();
   if(ledState == LOW){
@@ -264,4 +319,5 @@ void loop() {
        analogWrite(ena, rightSpeed);
     }
   }
+
 }
