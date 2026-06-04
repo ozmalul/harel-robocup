@@ -19,8 +19,8 @@
 #define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 
 
-#define SIDE_TRIGGER_PIN  52  // Arduino pin tied to trigger pin on the ultrasonic sensor.
-#define SIDE_ECHO_PIN     53  // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define SIDE_TRIGGER_PIN  50  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define SIDE_ECHO_PIN     51  // Arduino pin tied to echo pin on the ultrasonic sensor.
 #define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 
 NewPing front_sonar(FRONT_TRIGGER_PIN, FRONT_ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
@@ -186,7 +186,8 @@ void loop() {
   if (front_distance > 0 && front_distance < 15)
   {
 
-    //stop();
+    stop();
+    pulse();
     delay(50);
 
     int side_distance = side_sonar.ping_cm();
@@ -194,18 +195,19 @@ void loop() {
     Serial.print(side_distance); // Send ping, get distance in cm and print result (0 = outside set distance range)
     Serial.println("cm");
 
-    while (true){//(! (side_distance > 0 && side_distance < 25)) {
+    while (!(side_distance>=0 && side_distance < 25)) {
       //  while(true){
       delay(50);
       side_distance = side_sonar.ping_cm();
-      right();
+      hardright();
       Serial.print("side_distance: 111 ");
       Serial.print(side_distance); // Send ping, get distance in cm and print result (0 = outside set distance range)
       Serial.println("cm");
     pulse();
     }
-    right();
+    stop();
     pulse();
+    delay(1000);
     while (digitalRead(centerSensor) == HIGH) {
       while (side_distance > 0 && side_distance < 75 && digitalRead(centerSensor) == HIGH) {
         //  while(true){
